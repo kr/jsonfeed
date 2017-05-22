@@ -1,17 +1,24 @@
-Documentation https://godoc.org/github.com/kr/jsonfeed
+Documentation
 
-package jsonfeed // import "github.com/kr/jsonfeed"
+  https://godoc.org/github.com/kr/jsonfeed
 
-Package jsonfeed provides types that encode and decode JSON Feed files, as
-specified in "JSON Feed Version 1". See https://jsonfeed.org/version/1.
+Contributing
 
-This package's interface might change in the future in a way that requires
-updates to client code. If you want to avoid having to update, you should
-vendor this package in your application.
+  Just open a pull request, make sure to explain
+  your new feature or bug fix, and be ready to
+  update your patch based on code review feedback.
 
-func Validity(f *Feed) error
-type Attachment struct{ ... }
-type Author struct{ ... }
-type Feed struct{ ... }
-type Hub struct{ ... }
-type Item struct{ ... }
+  We maintain 100% statement coverage in tests.
+
+Overview
+
+  package jsonfeed // import "github.com/kr/jsonfeed"
+
+  Package jsonfeed provides types that encode and decode
+  JSON Feed files, as specified in "JSON Feed Version 1".
+  See https://jsonfeed.org/version/1.
+
+  This package's interface might change in the future in
+  a way that requires updates to client code. If you want
+  to avoid having to update, you should vendor this
+  package in your application.
