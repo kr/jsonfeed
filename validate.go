@@ -19,10 +19,10 @@ func Validity(f *Feed) error {
 		}
 	}
 	switch "" {
-	case f.Title:
-		return errors.New("jsonfeed: no title")
 	case f.Version:
 		return errors.New("jsonfeed: no version")
+	case f.Title:
+		return errors.New("jsonfeed: no title")
 	}
 	ids := make(map[string]bool)
 	for _, t := range f.Items {
