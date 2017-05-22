@@ -4,6 +4,15 @@ import (
 	"time"
 )
 
+// Version is the version of JSON Feed
+// generated and recognized by this package.
+// It is automatically inserted into a feed when marshaling,
+// and examined when checking validity.
+// Future editions of this package that support subsequent versions
+// of the spec will recognize all past versions;
+// since this is currently the only version, it must match exactly.
+const Version = "https://jsonfeed.org/version/1"
+
 // Feed represents a JSON Feed.
 // It can be marshaled and unmarshaled with package encoding/json.
 type Feed struct {

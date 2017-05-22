@@ -18,10 +18,10 @@ func Validity(f *Feed) error {
 			return err
 		}
 	}
-	switch "" {
-	case f.Version:
-		return errors.New("jsonfeed: no version")
-	case f.Title:
+	switch {
+	case f.Version != Version:
+		return errors.New("jsonfeed: bad version")
+	case f.Title == "":
 		return errors.New("jsonfeed: no title")
 	}
 	ids := make(map[string]bool)

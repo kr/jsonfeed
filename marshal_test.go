@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
+
+	"github.com/kr/pretty"
 )
 
 func TestAnyString(t *testing.T) {
@@ -78,7 +80,7 @@ func TestUnmarshalFeedBad(t *testing.T) {
 
 func TestMarshalFeedOk(t *testing.T) {
 	f := &Feed{
-		Version: "https://jsonfeed.org/version/1",
+		Version: Version,
 		Title:   "title",
 		Items: []Item{{
 			ID:          "id",
@@ -95,12 +97,14 @@ func TestMarshalFeedOk(t *testing.T) {
 	}
 }
 
-func TestMarshalFeedNil(t *testing.T) {
+func TestMarshalFeedFixups(t *testing.T) {
 	f := &Feed{
-		Version: "https://jsonfeed.org/version/1",
+		Version: "", // test replacing version string
 		Title:   "title",
 		Items:   nil, // test encoding as "[]"
 	}
+	saved := new(Feed)
+	*saved = *f
 	got, err := json.Marshal(f)
 	if err != nil {
 		t.Fatalf("Marshal(%#v) = %v, want nil", f, err)
@@ -108,6 +112,10 @@ func TestMarshalFeedNil(t *testing.T) {
 	want := []byte(`{"version":"https://jsonfeed.org/version/1","title":"title","items":[]}`)
 	if !bytes.Equal(got, want) {
 		t.Errorf("Marshal(%#v) => %#q, want %#q", f, got, want)
+	}
+	if !reflect.DeepEqual(f, saved) {
+		t.Error("MarshalJSON mutated f")
+		pretty.Ldiff(t, f, saved)
 	}
 }
 

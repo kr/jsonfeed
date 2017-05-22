@@ -4,16 +4,22 @@ import "encoding/json"
 
 // MarshalJSON has the standard behavior for marshaling a struct,
 // except it validates f before marshaling.
+// It always emits the version in Version,
+// regardless of the value in f.
 func (f *Feed) MarshalJSON() ([]byte, error) {
-	err := Validity(f)
+	// TODO(kr): avoid copying all of f
+	f1 := new(Feed)
+	*f1 = *f
+	f1.Version = Version
+	err := Validity(f1)
 	if err != nil {
 		return nil, err
 	}
-	if f.Items == nil {
-		f.Items = make([]Item, 0) // avoid emitting JSON 'null'
+	if f1.Items == nil {
+		f1.Items = make([]Item, 0) // avoid emitting JSON 'null'
 	}
 	type t Feed // get rid of method MarshalJSON to avoid recursion
-	return json.Marshal((*t)(f))
+	return json.Marshal((*t)(f1))
 }
 
 // UnmarshalJSON has the standard behavior for unmarshaling a struct,
