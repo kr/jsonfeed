@@ -25,11 +25,11 @@ func Validity(f *Feed) error {
 		return errors.New("jsonfeed: no version")
 	}
 	ids := make(map[string]bool)
-	for _, item := range f.Items {
-		if ids[item.ID] {
-			return errors.New("jsonfeed: duplicate id " + item.ID)
+	for _, t := range f.Items {
+		if ids[t.ID] {
+			return errors.New("jsonfeed: duplicate id " + t.ID)
 		}
-		ids[item.ID] = true
+		ids[t.ID] = true
 	}
 	return nil
 }
@@ -44,16 +44,16 @@ func validHub(h *Hub) error {
 	return nil
 }
 
-func validItem(item *Item) error {
+func validItem(t *Item) error {
 	switch "" {
-	case item.ID:
+	case t.ID:
 		return errors.New("jsonfeed: no id in item")
 	}
-	if item.ContentHTML == "" && item.ContentText == "" {
-		return errors.New("jsonfeed: no content_html or content_text in item " + item.ID)
+	if t.ContentHTML == "" && t.ContentText == "" {
+		return errors.New("jsonfeed: no content_html or content_text in item " + t.ID)
 	}
-	for i := range item.Attachments {
-		if err := validAttachment(&item.Attachments[i]); err != nil {
+	for i := range t.Attachments {
+		if err := validAttachment(&t.Attachments[i]); err != nil {
 			return err
 		}
 	}

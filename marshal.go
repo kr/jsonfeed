@@ -30,13 +30,13 @@ func (f *Feed) UnmarshalJSON(b []byte) error {
 // except that it allows the id to be of any type,
 // converting it if necessary to a string,
 // as required by the spec.
-func (item *Item) UnmarshalJSON(b []byte) error {
-	v := unmarshalItem{Item: item}
+func (t *Item) UnmarshalJSON(b []byte) error {
+	v := unmarshalItem{Item: t}
 	err := json.Unmarshal(b, &v)
 	if err != nil {
 		return err
 	}
-	item.ID = string(v.ID)
+	t.ID = string(v.ID)
 	return nil
 }
 
