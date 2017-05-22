@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/kr/pretty"
 )
@@ -54,9 +55,55 @@ func TestUnmarshalItemOk(t *testing.T) {
 			t.Errorf("Item.UnmarshalJSON(%q) = %v, want nil", test.encoded, err)
 			continue
 		}
+		got.DatePublished = time.Time{} // tested below
+		got.DateModified = time.Time{}  // tested below
 		if !reflect.DeepEqual(got, test.decoded) {
 			t.Errorf("Item.UnmarshalJSON(%q) => %v, want %v", test.encoded, got, test.decoded)
+			pretty.Ldiff(t, got, test.decoded)
 		}
+	}
+}
+
+func TestUnmarshalItemDateExplicit(t *testing.T) {
+	date := time.Date(1985, 10, 26, 1, 21, 0, 0, time.FixedZone("", -28800))
+	b := []byte(`{
+		"id": "id",
+		"content_text": "text",
+		"date_published": "1985-10-26T01:21:00-08:00",
+		"date_modified": "1985-10-26T01:21:00-08:00"
+	}`)
+	var got Item
+	err := json.Unmarshal(b, &got)
+	if err != nil {
+		t.Fatalf("Item.UnmarshalJSON(%q) = %v, want nil", b, err)
+	}
+
+	want := Item{
+		ID:            "id",
+		ContentText:   "text",
+		DatePublished: date,
+		DateModified:  date,
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("Item.UnmarshalJSON(%q) => %v, want %v", b, got, want)
+		pretty.Ldiff(t, got, want)
+	}
+}
+
+func TestUnmarshalItemDateDefault(t *testing.T) {
+	b := []byte(`{"id": "id", "content_text": "text"}`)
+	var got Item
+	before := time.Now().UTC()
+	err := json.Unmarshal(b, &got)
+	after := time.Now().UTC()
+	if err != nil {
+		t.Fatalf("Item.UnmarshalJSON(%q) = %v, want nil", b, err)
+	}
+	if g := got.DatePublished; g.Before(before) || g.After(after) {
+		t.Errorf("Item.UnmarshalJSON(%q) => bad date_published %v", b, g)
+	}
+	if g := got.DateModified; g.Before(before) || g.After(after) {
+		t.Errorf("Item.UnmarshalJSON(%q) => bad date_modified %v", b, g)
 	}
 }
 

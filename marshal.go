@@ -1,6 +1,9 @@
 package jsonfeed
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"time"
+)
 
 // MarshalJSON has the standard behavior for marshaling a struct,
 // except it validates f before marshaling.
@@ -36,7 +39,8 @@ func (f *Feed) UnmarshalJSON(b []byte) error {
 // UnmarshalJSON has the standard behavior for unmarshaling a struct,
 // except that it allows the id to be of any type,
 // converting it if necessary to a string,
-// as required by the spec.
+// as required by the spec,
+// and it replaces missing dates with the current time.
 func (t *Item) UnmarshalJSON(b []byte) error {
 	type T Item // get rid of method UnmarshalJSON to avoid recursion
 	v := struct {
@@ -48,6 +52,12 @@ func (t *Item) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	t.ID = string(v.ID)
+	if t.DatePublished.IsZero() {
+		t.DatePublished = time.Now().UTC()
+	}
+	if t.DateModified.IsZero() {
+		t.DateModified = time.Now().UTC()
+	}
 	return nil
 }
 
