@@ -16,29 +16,28 @@ func (f *Feed) MarshalJSON() ([]byte, error) {
 	return json.Marshal((*t)(f))
 }
 
-// UnmarshalJSON has the standard behavior for unmarshaling
-// a struct, except for two things:
-// it allows an item id to be of any type,
-// converting it if necessary to a string,
-// as required by the spec,
-// and it validates the parsed feed.
+// UnmarshalJSON has the standard behavior for unmarshaling a struct,
+// except that it validates the parsed feed.
 func (f *Feed) UnmarshalJSON(b []byte) error {
-	v := unmarshalFeed{Feed: f}
-	err := json.Unmarshal(b, &v)
+	err := json.Unmarshal(b, f)
 	if err != nil {
 		return err
-	}
-	f.Items = make([]Item, 0, len(v.Items))
-	for _, item := range v.Items {
-		item.Item.ID = string(item.ID)
-		f.Items = append(f.Items, *item.Item)
 	}
 	return Validity(f)
 }
 
-type unmarshalFeed struct {
-	*Feed
-	Items []unmarshalItem
+// UnmarshalJSON has the standard behavior for unmarshaling a struct,
+// except that it allows the id to be of any type,
+// converting it if necessary to a string,
+// as required by the spec.
+func (item *Item) UnmarshalJSON(b []byte) error {
+	v := unmarshalItem{Item: item}
+	err := json.Unmarshal(b, &v)
+	if err != nil {
+		return err
+	}
+	item.ID = string(v.ID)
+	return nil
 }
 
 type unmarshalItem struct {
