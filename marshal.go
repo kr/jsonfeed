@@ -19,7 +19,8 @@ func (f *Feed) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON has the standard behavior for unmarshaling a struct,
 // except that it validates the parsed feed.
 func (f *Feed) UnmarshalJSON(b []byte) error {
-	err := json.Unmarshal(b, f)
+	type t Feed // get rid of method UnmarshalJSON to avoid recursion
+	err := json.Unmarshal(b, (*t)(f))
 	if err != nil {
 		return err
 	}
@@ -31,18 +32,17 @@ func (f *Feed) UnmarshalJSON(b []byte) error {
 // converting it if necessary to a string,
 // as required by the spec.
 func (t *Item) UnmarshalJSON(b []byte) error {
-	v := unmarshalItem{Item: t}
+	type T Item // get rid of method UnmarshalJSON to avoid recursion
+	v := struct {
+		*T
+		ID anyString `json:"id"`
+	}{T: (*T)(t)}
 	err := json.Unmarshal(b, &v)
 	if err != nil {
 		return err
 	}
 	t.ID = string(v.ID)
 	return nil
-}
-
-type unmarshalItem struct {
-	*Item
-	ID anyString
 }
 
 type anyString string
