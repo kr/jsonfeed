@@ -31,7 +31,7 @@ func Validity(f *Feed) error {
 		}
 		ids[t.ID] = true
 	}
-	return nil
+	return validAuthor(f.Author)
 }
 
 func validHub(h *Hub) error {
@@ -57,7 +57,7 @@ func validItem(t *Item) error {
 			return err
 		}
 	}
-	return nil
+	return validAuthor(t.Author)
 }
 
 func validAttachment(a *Attachment) error {
@@ -66,6 +66,16 @@ func validAttachment(a *Attachment) error {
 		return errors.New("jsonfeed: no url in attachment")
 	case a.MIMEType:
 		return errors.New("jsonfeed: no mime_type in attachment")
+	}
+	return nil
+}
+
+func validAuthor(a *Author) error {
+	if a == nil {
+		return nil
+	}
+	if a.Name == "" && a.URL == "" && a.Avatar == "" {
+		return errors.New("jsonfeed: author must provide name or url or avatar")
 	}
 	return nil
 }

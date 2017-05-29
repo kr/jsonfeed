@@ -104,3 +104,11 @@ func TestInvalidHub(t *testing.T) {
 		}
 	}
 }
+
+func TestInvalidAuthor(t *testing.T) {
+	a := &Author{}
+	err := validAuthor(a)
+	if err == nil {
+		t.Errorf("validAuthor(%v) = nil, want error", a)
+	}
+}
