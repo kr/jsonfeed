@@ -19,8 +19,8 @@ func validFeed(f *Feed) error {
 		}
 	}
 	switch {
-	case f.Version != Version:
-		return errors.New("jsonfeed: bad version")
+	case f.Version == "":
+		return errors.New("jsonfeed: no version")
 	case f.Title == "":
 		return errors.New("jsonfeed: no title")
 	}
