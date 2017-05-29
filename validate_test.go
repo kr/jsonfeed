@@ -100,7 +100,7 @@ func TestInvalidHub(t *testing.T) {
 	for _, test := range cases {
 		err := validHub(test)
 		if err == nil {
-			t.Errorf("validAttachment(%v) = nil, want error", test)
+			t.Errorf("validHub(%v) = nil, want error", test)
 		}
 	}
 }
