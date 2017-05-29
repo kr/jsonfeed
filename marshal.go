@@ -14,7 +14,7 @@ func (f *Feed) MarshalJSON() ([]byte, error) {
 	f1 := new(Feed)
 	*f1 = *f
 	f1.Version = Version
-	err := Validity(f1)
+	err := validFeed(f1)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func (f *Feed) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	return Validity(f)
+	return validFeed(f)
 }
 
 // UnmarshalJSON has the standard behavior for unmarshaling a struct,

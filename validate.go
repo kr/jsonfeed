@@ -4,10 +4,10 @@ import (
 	"errors"
 )
 
-// Validity returns nil if f is a valid JSON Feed Version 1.
+// validFeed returns nil if f is a valid JSON Feed Version 1.
 // Otherwise, it returns an error describing at least one
 // way in which f is invalid.
-func Validity(f *Feed) error {
+func validFeed(f *Feed) error {
 	for i := range f.Hubs {
 		if err := validHub(&f.Hubs[i]); err != nil {
 			return err

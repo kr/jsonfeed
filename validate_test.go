@@ -20,9 +20,9 @@ func TestValidFeed(t *testing.T) {
 			},
 		},
 	}
-	err := Validity(f)
+	err := validFeed(f)
 	if err != nil {
-		t.Errorf("Validity(%#v) = %v, want nil", f, err)
+		t.Errorf("validFeed(%#v) = %v, want nil", f, err)
 	}
 }
 
@@ -51,9 +51,9 @@ func TestInvalidFeed(t *testing.T) {
 	}
 
 	for _, test := range cases {
-		err := Validity(test)
+		err := validFeed(test)
 		if err == nil {
-			t.Errorf("Validity(%v) = nil, want error", test)
+			t.Errorf("validFeed(%v) = nil, want error", test)
 		}
 	}
 }
