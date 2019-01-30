@@ -6,8 +6,6 @@ import (
 	"reflect"
 	"testing"
 	"time"
-
-	"github.com/kr/pretty"
 )
 
 func TestAnyString(t *testing.T) {
@@ -59,7 +57,6 @@ func TestUnmarshalItemOk(t *testing.T) {
 		got.DateModified = time.Time{}  // tested below
 		if !reflect.DeepEqual(got, test.decoded) {
 			t.Errorf("Item.UnmarshalJSON(%q) => %v, want %v", test.encoded, got, test.decoded)
-			pretty.Ldiff(t, got, test.decoded)
 		}
 	}
 }
@@ -86,7 +83,6 @@ func TestUnmarshalItemDateExplicit(t *testing.T) {
 	}
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("Item.UnmarshalJSON(%q) => %v, want %v", b, got, want)
-		pretty.Ldiff(t, got, want)
 	}
 }
 
@@ -162,7 +158,6 @@ func TestMarshalFeedFixups(t *testing.T) {
 	}
 	if !reflect.DeepEqual(f, saved) {
 		t.Error("MarshalJSON mutated f")
-		pretty.Ldiff(t, f, saved)
 	}
 }
 
